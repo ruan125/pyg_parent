@@ -37,4 +37,16 @@ public class TemplateController {
     }
 
 
+    @RequestMapping("/add")
+    public Result add(@RequestBody TypeTemplate template) {
+        try {
+            templateService.add(template);
+            return  new Result(true, "添加成功!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, "添加失败!");
+        }
+    }
+
+
 }

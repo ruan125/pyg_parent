@@ -453,6 +453,76 @@ public class TypeTemplateQuery {
             addCriterion("custom_attribute_items not between", value1, value2, "customAttributeItems");
             return (Criteria) this;
         }
+
+        public Criteria andTempStatusIsNull() {
+            addCriterion("temp_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusIsNotNull() {
+            addCriterion("temp_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusEqualTo(String value) {
+            addCriterion("temp_status =", value, "tempStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusNotEqualTo(String value) {
+            addCriterion("temp_status <>", value, "tempStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusGreaterThan(String value) {
+            addCriterion("temp_status >", value, "tempStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusGreaterThanOrEqualTo(String value) {
+            addCriterion("temp_status >=", value, "tempStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusLessThan(String value) {
+            addCriterion("temp_status <", value, "tempStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusLessThanOrEqualTo(String value) {
+            addCriterion("temp_status <=", value, "tempStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusLike(String value) {
+            addCriterion("temp_status like", value, "tempStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusNotLike(String value) {
+            addCriterion("temp_status not like", value, "tempStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusIn(List<String> values) {
+            addCriterion("temp_status in", values, "tempStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusNotIn(List<String> values) {
+            addCriterion("temp_status not in", values, "tempStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusBetween(String value1, String value2) {
+            addCriterion("temp_status between", value1, value2, "tempStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andTempStatusNotBetween(String value1, String value2) {
+            addCriterion("temp_status not between", value1, value2, "tempStatus");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

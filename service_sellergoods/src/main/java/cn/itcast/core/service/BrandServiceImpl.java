@@ -1,6 +1,7 @@
 package cn.itcast.core.service;
 
 import cn.itcast.core.dao.good.BrandDao;
+import cn.itcast.core.dao.seller.SellerDao;
 import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.good.Brand;
 import cn.itcast.core.pojo.good.BrandQuery;
@@ -8,6 +9,8 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -20,9 +23,19 @@ public class BrandServiceImpl implements BrandService {
     @Autowired
     private BrandDao brandDao;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private  SellerDao sellerDao;
+
     @Override
     public List<Brand> findAll() {
-        return brandDao.selectByExample(null);
+        List<Brand> brandList = brandDao.selectByExample(null);
+        for (Brand oldbrand : brandList) {
+
+        }
+        return brandList;
+
     }
 
     @Override
@@ -30,14 +43,17 @@ public class BrandServiceImpl implements BrandService {
         //创建查询对象
         BrandQuery query = new BrandQuery();
         //组装条件
+        BrandQuery.Criteria criteria = query.createCriteria();
         if (brand != null) {
             //创建sql语句中的where条件对象
-            BrandQuery.Criteria criteria = query.createCriteria();
             if (brand.getFirstChar() != null && !"".equals(brand.getFirstChar())) {
                 criteria.andFirstCharEqualTo(brand.getFirstChar());
             }
             if (brand.getName() != null && !"".equals(brand.getName())) {
                 criteria.andNameLike("%"+brand.getName()+"%");
+            }
+            if (brand.getStatus() !=null && !"".equals(brand.getStatus())){
+                criteria.andStatusEqualTo(brand.getStatus());
             }
         }
         PageHelper.startPage(page, rows);
@@ -49,6 +65,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public void add(Brand brand) {
         //添加的时候, 传入参数brand对象中的所有属性必须有值, 都参与添加
+        brand.setStatus("0");
         //brandDao.insert();
         //添加的时候会判断brand传入参数对象中的属性是否有值, 如果没有值不参与添加, 如果有值再拼接到sql语句中参与添加
         brandDao.insertSelective(brand);
@@ -90,4 +107,18 @@ public class BrandServiceImpl implements BrandService {
         List<Map> list = brandDao.selectOptionList();
         return list;
     }
+
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        if (ids!=null){
+            //根据品牌id修改品牌审核的状态
+            for (Long id : ids) {
+                Brand brand = new Brand();
+                brand.setStatus(status);
+                brand.setId(id);
+                brandDao.updateByPrimaryKeySelective(brand);
+            }
+        }
+    }
+
 }

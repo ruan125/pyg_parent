@@ -71,6 +71,13 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public void add(TypeTemplate template) {
+        String brandIds = template.getBrandIds();
+        brandIds="["+brandIds+"]";
+        template.setBrandIds(brandIds);
+        String specIds = template.getSpecIds();
+        specIds="["+specIds+"]";
+        template.setSpecIds(specIds);
+        template.setTempStatus("0");
         templateDao.insertSelective(template);
     }
 
@@ -118,5 +125,18 @@ public class TemplateServiceImpl implements TemplateService {
         }
 
         return specList;
+    }
+
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        if (ids!=null){
+            //根据模板的id对模板状态进行修改
+            for (Long id : ids) {
+                TypeTemplate template = new TypeTemplate();
+                template.setId(id);
+                template.setTempStatus(status);
+                templateDao.updateByPrimaryKeySelective(template);
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ import cn.itcast.core.dao.specification.SpecificationDao;
 import cn.itcast.core.dao.specification.SpecificationOptionDao;
 import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.entity.SpecEntity;
+import cn.itcast.core.pojo.good.Brand;
 import cn.itcast.core.pojo.specification.Specification;
 import cn.itcast.core.pojo.specification.SpecificationOption;
 import cn.itcast.core.pojo.specification.SpecificationOptionQuery;
@@ -35,18 +36,21 @@ public class SpecServiceImpl implements SpecService {
         SpecificationQuery.Criteria criteria = query.createCriteria();
         if (spec != null) {
             if (spec.getSpecName() != null && !"".equals(spec.getSpecName())) {
-                criteria.andSpecNameLike("%"+spec.getSpecName()+"%");
+                criteria.andSpecNameLike("%" + spec.getSpecName() + "%");
             }
         }
 
         PageHelper.startPage(page, rows);
-        Page<Specification> specList = (Page<Specification>)specDao.selectByExample(query);
+        Page<Specification> specList = (Page<Specification>) specDao.selectByExample(query);
         return new PageResult(specList.getTotal(), specList.getResult());
     }
 
     @Override
     public void add(SpecEntity specEntity) {
         //1. 保存规格对象
+        //存入的规格状态默认为0
+        specEntity.getSpecification().setSpecStatus("0");
+
         specDao.insertSelective(specEntity.getSpecification());
         //2. 遍历规格选项集合
         if (specEntity.getSpecificationOptionList() != null) {
@@ -121,5 +125,19 @@ public class SpecServiceImpl implements SpecService {
     @Override
     public List<Map> selectOptionList() {
         return specDao.selectOptionList();
+    }
+
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        if (ids != null) {
+            //根据规格id修改规格审核的状态
+            for (Long id : ids) {
+                Specification specification = new Specification();
+                specification.setId(id);
+                specification.setSpecStatus(status);
+
+                specDao.updateByPrimaryKeySelective(specification);
+            }
+        }
     }
 }

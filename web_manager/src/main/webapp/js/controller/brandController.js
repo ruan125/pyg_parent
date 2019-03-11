@@ -11,6 +11,7 @@ app.controller("brandController",function($scope,$controller,$http,brandService)
 		});
 	}
 
+
 	// 分页查询
 	$scope.findByPage = function(page,rows){
 		// 向后台发送请求获取数据:
@@ -66,11 +67,13 @@ app.controller("brandController",function($scope,$controller,$http,brandService)
 				// 保存失败
 				alert(response.message);
 			}
-		});
+	4	});
 	}
-	
+	/*定义搜索类*/
 	$scope.searchEntity={};
-	
+    // 显示状态
+    $scope.status = ["未审核","审核通过","审核未通过","关闭"];
+
 	// 假设定义一个查询的实体：searchEntity
 	$scope.search = function(page,rows){
 		// 向后台发送请求获取数据:
@@ -79,5 +82,20 @@ app.controller("brandController",function($scope,$controller,$http,brandService)
 			$scope.list = response.rows;
 		});
 	}
+
+    // 审核的方法:
+    $scope.updateStatus = function(status){
+        brandService.updateStatus($scope.selectIds,status).success(function(response){
+            if(response.success){
+                $scope.reloadList();//刷新列表
+                $scope.selectIds = [];
+            }else{
+                alert(response.message);
+            }
+        });
+    }
+
+
+
 	
 });

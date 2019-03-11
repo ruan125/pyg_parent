@@ -59,4 +59,16 @@ public class TemplateController {
             return new Result(false, "删除失败!");
         }
     }
+
+    @RequestMapping("/updateStatus")
+    public Result updateStatus(Long[] ids, String status) {
+        try {
+            templateService.updateStatus(ids, status);
+            return new Result(true, "修改成功!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, "修改失败!");
+        }
+    }
 }

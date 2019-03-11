@@ -71,7 +71,9 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 		);				
 	}
 	
-	$scope.searchEntity={};//定义搜索对象 
+	$scope.searchEntity={};//定义搜索对象
+
+    $scope.status = ["未审核","审核通过","审核未通过","关闭"];
 	
 	//搜索
 	$scope.search=function(page,rows){			
@@ -109,4 +111,16 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 	$scope.deleteTableRow = function(index){
 		$scope.entity.customAttributeItems.splice(index,1);
 	}
+
+    // 审核的方法:
+    $scope.updateStatus = function(status){
+        typeTemplateService.updateStatus($scope.selectIds,status).success(function(response){
+            if(response.success){
+                $scope.reloadList();//刷新列表
+                $scope.selectIds = [];
+            }else{
+                alert(response.message);
+            }
+        });
+    }
 });	

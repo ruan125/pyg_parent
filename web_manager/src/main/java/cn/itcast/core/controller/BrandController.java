@@ -6,6 +6,7 @@ import cn.itcast.core.pojo.good.Brand;
 import cn.itcast.core.service.BrandService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import org.apache.ibatis.io.ResolverUtil;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,34 +35,36 @@ public class BrandController {
 
     /**
      * 分页查询
-     * @param page  当前页
-     * @param rows  每页展示多少条数据
+     * @param page 当前页
+     * @param rows 每页展示多少条数据
      * @return
      */
     @RequestMapping("/findPage")
     public PageResult findPage(Integer page, Integer rows) {
-        PageResult pageResult= brandService.findPage(null ,page, rows);
+
+        PageResult pageResult = brandService.findPage(null, page, rows);
         return pageResult;
     }
 
     /**
      * 添加
-     * @param brand  品牌对象
+     * @param brand 品牌对象
      * @return
      */
     @RequestMapping("/add")
     public Result add(@RequestBody Brand brand) {
         try {
             brandService.add(brand);
-            return  new Result(true, "添加成功!");
+            return new Result(true, "添加成功!");
         } catch (Exception e) {
             e.printStackTrace();
-            return  new Result(false, "添加失败!");
+            return new Result(false, "添加失败!");
         }
     }
 
     /**
      * 修改回显数据
+     *
      * @param id
      * @return
      */
@@ -73,6 +76,7 @@ public class BrandController {
 
     /**
      * 修改
+     *
      * @param brand
      * @return
      */
@@ -89,6 +93,7 @@ public class BrandController {
 
     /**
      * 删除
+     *
      * @param ids
      * @return
      */
@@ -96,15 +101,16 @@ public class BrandController {
     public Result delete(Long[] ids) {
         try {
             brandService.delete(ids);
-            return  new Result(true, "删除成功!");
+            return new Result(true, "删除成功!");
         } catch (Exception e) {
             e.printStackTrace();
-            return  new Result(false, "删除失败!");
+            return new Result(false, "删除失败!");
         }
     }
 
     /**
      * 高级查询(分页, 高级查询)
+     *
      * @param page  当前页
      * @param rows  每页展示多少条数据
      * @param brand 需要查询的条件品牌对象
@@ -112,6 +118,7 @@ public class BrandController {
      */
     @RequestMapping("/search")
     public PageResult search(Integer page, Integer rows, @RequestBody Brand brand) {
+
         PageResult pageResult = brandService.findPage(brand, page, rows);
         return pageResult;
     }
@@ -124,4 +131,18 @@ public class BrandController {
     public List<Map> selectOptionList() {
         return brandService.selectOptionList();
     }
+
+
+    @RequestMapping("/updateStatus")
+    public Result updateStatus(Long[] ids, String status) {
+        try {
+            brandService.updateStatus(ids, status);
+            return new Result(true, "修改成功!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, "修改失败!");
+        }
+    }
+
 }

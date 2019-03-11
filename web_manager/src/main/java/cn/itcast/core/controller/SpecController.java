@@ -81,6 +81,19 @@ public class SpecController {
      */
     @RequestMapping("/selectOptionList")
     public List<Map> selectOptionList() {
+
         return specService.selectOptionList();
+    }
+
+    @RequestMapping("/updateStatus")
+    public Result updateStatus(Long[] ids, String status) {
+        try {
+            specService.updateStatus(ids, status);
+            return new Result(true, "修改成功!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, "修改失败!");
+        }
     }
 }
